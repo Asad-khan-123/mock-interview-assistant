@@ -1,6 +1,37 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function Signup() {
+  const[username, setUsername] = useState("");
+  const[email, setEmail] = useState("")
+  const[password, setPassword] = useState("")
+  const[confirmPassword, setConfirmPassword] = useState("")
+  const navigate = useNavigate();
+
+  const handleSignup = async(e) => {
+    e.preventDefault();
+    const res = await fetch("http://localhost:8000/api/v1/users/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, email, password, confirmPassword }),
+    });
+
+    const data = await res.json();
+
+    if(!res.ok) {
+      alert(data.message || "Signup failed");
+      return;
+    }
+
+    alert("Signup successful! Please log in.");
+    // Optionally, redirect to login page
+    navigate("/login");
+  }
+
+  
+
+
+
   return (
     <div className="min-h-screen flex bg-[#0B1C2D] text-white">
 
@@ -89,13 +120,15 @@ export default function Signup() {
       {/* RIGHT – SIGNUP FORM */}
       <div className="w-full md:w-1/2 flex items-center justify-center">
         <div className="w-[400px] bg-[#102A43] p-8 rounded-xl border border-[#1F3B5B] shadow-2xl">
-
+        <form onSubmit={(e) => {handleSignup(e)}}>
           <h2 className="text-2xl font-semibold text-center mb-6">
             Create your account
           </h2>
 
           <input
             type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             placeholder="Full name"
             className="w-full mb-4 p-3 rounded-md bg-[#0B1C2D]
               border border-[#1F3B5B] focus:border-[#3FD1FF] outline-none"
@@ -103,6 +136,8 @@ export default function Signup() {
 
           <input
             type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
             className="w-full mb-4 p-3 rounded-md bg-[#0B1C2D]
               border border-[#1F3B5B] focus:border-[#3FD1FF] outline-none"
@@ -110,6 +145,8 @@ export default function Signup() {
 
           <input
             type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)} 
             placeholder="Password"
             className="w-full mb-4 p-3 rounded-md bg-[#0B1C2D]
               border border-[#1F3B5B] focus:border-[#3FD1FF] outline-none"
@@ -117,17 +154,21 @@ export default function Signup() {
 
           <input
             type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Confirm password"
             className="w-full mb-5 p-3 rounded-md bg-[#0B1C2D]
               border border-[#1F3B5B] focus:border-[#3FD1FF] outline-none"
           />
 
           <button
+          type="submit"
             className="w-full py-3 rounded-md bg-[#3FD1FF]
             text-[#0B1C2D] font-semibold hover:shadow-[0_0_15px_#3FD1FF]"
           >
             Sign up
           </button>
+        </form>
 
           <Divider />
 

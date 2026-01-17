@@ -1,6 +1,30 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function Login() {
+  const[email, setEmail] = useState("");
+  const[password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = async(e) => {
+    e.preventDefault();
+    // Implement login logic here
+    const res = await fetch("http://localhost:8000/api/v1/users/login", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({email, password})
+    })
+
+    const data = await res.json();
+    console.log(data.user);
+    if(!res.ok) {
+      alert(data.message || "Login failed");
+      return;
+    }
+    alert("Login successful!");
+    // navigate("/");
+
+  }
   return (
     <div className="min-h-screen flex bg-[#0B1C2D] text-white">
 
@@ -42,13 +66,15 @@ export default function Login() {
       {/* RIGHT – LOGIN FORM */}
       <div className="w-full md:w-1/2 flex items-center justify-center">
         <div className="w-[380px] bg-[#102A43] p-8 rounded-xl border border-[#1F3B5B] shadow-2xl">
-
+          <form onSubmit={(e) => handleLogin(e)}>
           <h2 className="text-2xl font-semibold text-center mb-6">
             Log in to your account
           </h2>
 
           <input
             type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="Email address"
             className="w-full mb-4 p-3 rounded-md bg-[#0B1C2D]
               border border-[#1F3B5B] focus:border-[#3FD1FF] outline-none"
@@ -56,6 +82,8 @@ export default function Login() {
 
           <input
             type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
             className="w-full mb-5 p-3 rounded-md bg-[#0B1C2D]
               border border-[#1F3B5B] focus:border-[#3FD1FF] outline-none"
@@ -67,6 +95,7 @@ export default function Login() {
           >
             Login
           </button>
+          </form>
 
           {/* Divider */}
           <Divider />

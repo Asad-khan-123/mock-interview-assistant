@@ -1,0 +1,155 @@
+import {User} from "../models/user.model.js";
+import bcrypt from 'bcryptjs'
+import jwt from "jsonwebtoken";
+
+export const signup = async(req, res) => {
+  try{
+    const {username, email, password} = req.body;
+    if(!username || !email || !password) {
+      return res.status(400).json({message: "All fields are required", success: false})
+    }
+
+    const user = await User.findOne({email});
+    if(user){
+      return res.status(400).json({message: "User already exist", success: false})
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await User.create({
+      username,
+      email,
+      password: hashedPassword
+    })
+
+    return res.status(200).json({message: "USer registered successfully", success: true});
+    
+  } catch(error) {
+    return res.status(500).json({message: "Server Error", success: false});
+  }
+}
+
+export const login = async(req, res) => {
+  try{
+    const {email, password} = req.body;
+    if(!email||!password) {
+      return res.status(400).json({mesaage:"All eilds are required", success:false})
+    }
+    const user = await User.findOne({email});
+  
+    if(!user){
+      return res.status(400).json({message:"First create an account ", success:false})
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if(!isMatch){
+      return res.status(400).json({message:"Incorrect Password", success:false})
+    }
+
+    
+    const token = await jwt.sign({userId: user.id}, process.env.JWT_SECRET, {expiresIn: "1d"});
+    console.log("token", token);
+    return res.cookie("token", token, {httpOnly: true, maxAge: 24*60*60*1000}).status(200).json({
+      message: `Welcome back, ${user.username}, ${user.id}`,
+      success: true,
+      user});
+
+
+  } catch(error) {
+    return res.status(500).json({message: "Server Error", success: false});
+  }
+}
+
+
+
+
+// import {User} from "../models/user.model.js";
+// import bcrypt from "bcryptjs";
+// import jwt from "jsonwebtoken";
+// import getDataUri from "../utils/dataUri.js";
+
+// export const register = async(req, res) => {
+//   try {
+//     const {username, email, password} = req.body;
+//     if(!username || !email || !password) {
+//       return res.status(400).json({message: "All fields are required", success: false})
+//     }
+//     const user = await User.findOne({email})
+//     if(user){
+//       return res.status(400).json({message: "User already exists", success: false})
+//     }
+    
+//     const hashedPassword = await bcrypt.hash(password, 10);
+
+//     await User.create({
+//       username,
+//       email,
+//       password: hashedPassword
+//     }) 
+//     res.status(201).json({message: "User registered successfully", success: true});
+    
+//   } catch (error) {
+//     res.status(500).json({message: "Server Error", success: false});
+//   }
+// }
+
+
+
+
+// export const login = async(req, res) => {
+//   try {
+//     const {email, password} = req.body;
+//     if(!email || !password) {
+//       return res.status(400).json({message: "All fields are required", success: false});
+//     }
+
+//     let user = await User.findOne({email});
+//     if(!user) {
+//       return res.status(400).json({message: "first create account", success: false});
+//     }
+//     const isMatch = await bcrypt.compare(password, user.password);
+//     if(!isMatch) {
+//       return res.status(400).json({message: "Incorrect password", success: false});
+//     }
+
+//       user = {
+//       id: user._id,
+//       username: user.username,
+//       email: user.email,
+//       gender: user.gender,
+//       followers: user.followers,  
+//       following: user.following,
+//       profilePicture: user.profilePicture,
+//       bio: user.bio,
+//       posts: user.posts
+//     }
+
+    
+
+//     const token = await jwt.sign({userId: user.id}, process.env.JWT_SECRET, {expiresIn: "1d"});
+//     // const decode = await jwt.verify(token, process.env.JWT_SECRET);
+//     // console.log("decode", decode);
+//     // console.log("decode", decode.userId);
+
+
+
+//     return res.cookie("token", token, {httpOnly: true, maxAge: 24*60*60*1000}).status(200).json({
+//       message: `Welcome back, ${user.username}, ${user.id}`,
+//       success: true,
+//       user});
+
+    
+
+//   } catch (error) {
+//     res.status(500).json({message: "Server Error", success: false});
+//   }
+// }
+
+// export const logout = async(_, res) => {
+//   try {
+//     return res.cookie("token", "", {maxAge: 0}).status(200).json({
+//       message: "Logout successful",      success: true
+//   }) } catch (error) {
+//     res.status(500).json({message: "Server Error", success: false});
+//   }
+// }
