@@ -16,13 +16,18 @@ export default function Login() {
     })
 
     const data = await res.json();
-    console.log(data.user);
+    const token = data.token;
+    
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(data.user.username));
+    
+
     if(!res.ok) {
       alert(data.message || "Login failed");
       return;
     }
     alert("Login successful!");
-    // navigate("/");
+    navigate("/");
 
   }
   return (

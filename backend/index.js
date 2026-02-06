@@ -6,6 +6,7 @@ import connectdb from './utils/db.js';
 import router from './routers/user.routes.js';
 import cookieParser from 'cookie-parser';
 
+
 const app = express();
 
 // middlewares
@@ -27,6 +28,7 @@ app.get("/", (req, res) => {
 })
 
 app.use("/api/v1/users", router);
+
 
 const PORT = process.env.PORT;
 
