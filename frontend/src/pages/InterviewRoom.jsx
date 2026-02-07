@@ -1,10 +1,15 @@
+import BottomBar from "../components/interview-room/BottomBar";
+import LeftPanel from "../components/interview-room/LeftPanel";
+import MainPanel from "../components/interview-room/MainPanel";
+import TopBar from "../components/interview-room/TopBar";
+
 const InterviewRoom = () => {
   return (
     <div className="h-screen grid grid-rows-[60px_1fr_70px] bg-slate-950 text-slate-100">
 
       {/* Top Bar */}
-      <div className="border-b border-slate-700 px-4 flex items-center">
-        TOP BAR
+      <div className="border-b border-slate-700 px-4 flex items-center h-full">
+        <TopBar />
       </div>
 
       {/* Middle Section */}
@@ -12,19 +17,19 @@ const InterviewRoom = () => {
         
         {/* Left Panel */}
         <div className="border-r border-slate-700 p-3">
-          LEFT PANEL
+          <LeftPanel />
         </div>
 
         {/* Main Panel */}
         <div className="p-4">
-          MAIN PANEL
+          <MainPanel />
         </div>
 
       </div>
 
       {/* Bottom Bar */}
       <div className="border-t border-slate-700 px-4 flex items-center">
-        BOTTOM BAR
+        <BottomBar />
       </div>
 
     </div>
