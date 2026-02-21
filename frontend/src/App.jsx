@@ -7,12 +7,15 @@ import PublicRoute from './components/PublicRoute'
 import HomePage from './pages/Home'
 import InterviewSelection from './pages/InterviewSelection'
 import InterviewRoom from './pages/InterviewRoom'
+import InterviewResult from './pages/InterviewResult'
+
 
 
 const App = () => {
 
   return (
     <div>
+      
       <Routes>
 
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
@@ -20,9 +23,8 @@ const App = () => {
         <Route path="/" element={<ProtectedRoutes><HomePage /></ProtectedRoutes>} />
         <Route path="/interview" element={<ProtectedRoutes><InterviewSelection /></ProtectedRoutes>} />
         <Route path="/interview-room" element={<ProtectedRoutes><InterviewRoom /></ProtectedRoutes>} />
-          
-          
-        
+        <Route path="/interview-result" element={<ProtectedRoutes><InterviewResult /></ProtectedRoutes>} />
+            
       </Routes>
     </div>
   )

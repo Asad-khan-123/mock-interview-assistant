@@ -20,11 +20,13 @@ const InterviewSelection = () => {
       body: JSON.stringify({category: interviewType, difficulty: difficulty})
     }
     )
+    const data = await res.json();
     
     if(!res.ok){
       alert("Failed to start interview. Please try again.");
     }
     else{
+      localStorage.setItem("interviewId", data.interview);
       navigate("/interview-room");
     }
     

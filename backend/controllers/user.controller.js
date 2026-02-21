@@ -58,6 +58,7 @@ export const login = async(req, res) => {
 
 
   } catch(error) {
+    console.log("backend is not working")
     return res.status(500).json({message: "Server Error", success: false});
   }
 }

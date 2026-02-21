@@ -1,16 +1,21 @@
-const TopBar = () => {
+import {InterviewContext} from '../../context/interviewContext'; 
+import { useContext } from 'react';
+
+const TopBar = ({}) => {
+  const interviewState = useContext(InterviewContext);
+
   return (
     <div className="h-full w-full flex items-center justify-between px-4">
 
       {/* Left: Interview Info */}
      <div className="flex items-center gap-3">
         <h2 className="text-lg font-semibold">
-          MERN Stack Interview
+          {interviewState.interviewData?.category || "Loading..."}
         </h2>
 
         {/* Difficulty Badge */}
         <span className="text-xs px-2 py-1 rounded bg-blue-600 text-white">
-          Medium
+          {interviewState.interviewData?.difficulty || "N/A"}
         </span>
       </div>
 

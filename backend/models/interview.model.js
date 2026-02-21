@@ -1,17 +1,48 @@
 import mongoose from "mongoose";
 
-const interviewSchema = new mongoose.Schema(
+const AnswerSchema = new mongoose.Schema(
   {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+    answerText: {
+      type: String, // voice → text OR typed answer
+      default: "",
     },
-
-    category: {
+    question: {
       type: String,
       required: true,
-      trim: true,
+    },
+    answerType: {
+      type: String,
+      enum: ["voice", "text", "code"],
+      default: "voice",
+    },
+    timeTaken: {
+      type: Number, // seconds
+      default: 0,
+    },
+  },
+  { _id: false }
+);
+
+const InterviewSessionSchema = new mongoose.Schema(
+  {
+    // 🔐 Session Identity
+    sessionId: {
+      type: String,
+      required: false
+    },
+
+    // 👤 Candidate (future use)
+    candidateId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: false,
+    },
+
+    // 🧪 Interview Meta
+    category: {
+      type: String,
+      enum: ["Reactjs", "MERN Stack", "Fullstack", "DSA", "HR"],
+      required: true,
     },
 
     difficulty: {
@@ -20,27 +51,49 @@ const interviewSchema = new mongoose.Schema(
       required: true,
     },
 
-    questions: [
-      {
-        question: {
-          type: String,
-          required: true,
-        },
-      },
-    ],
+    // 📊 Interview Progress
+    currentQuestionIndex: {
+      type: Number,
+      default: 0,
+    },
+
+    totalQuestions: {
+      type: Number,
+      required: true,
+    },
 
     status: {
       type: String,
-      enum: ["pending", "completed"],
-      default: "pending",
+      enum: ["running", "completed", "terminated"],
+      default: "running",
     },
 
-    createdAt: {
-      type: Date,
-      default: Date.now,
+    // ❓ Questions snapshot
+    questions: [
+      {
+        questionId: mongoose.Schema.Types.ObjectId,
+        text: String,
+      },
+    ],
+
+    // ✍️ Answers
+    answers: [AnswerSchema],
+
+    // 📝 Feedback
+    feedback: {
+      rating: {
+        type: Number,
+        min: 1,
+        max: 5,
+      },
+      comment: {
+        type: String,
+      },
     },
   },
-  { timestamps: true } 
+  {
+    timestamps: true,
+  }
 );
 
-export default mongoose.model('Interview', interviewSchema)
+export default mongoose.model("InterviewSession", InterviewSessionSchema);
