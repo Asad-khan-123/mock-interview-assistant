@@ -25,6 +25,8 @@ export default function Navbar() {
         }
       });
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("interviewId");
       navigate("/login");
     } catch (err) {
       console.error("Logout failed");

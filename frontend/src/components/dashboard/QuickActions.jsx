@@ -24,11 +24,6 @@ export default function QuickActions() {
           text="Coding Round"
           onClick={() => navigate("/coding")}
         />
-        <ActionBtn
-          icon={<BookOpen size={18} />}
-          text="Practice"
-          onClick={() => navigate("/practice")}
-        />
       </div>
     </Card>
   );

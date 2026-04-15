@@ -1,12 +1,25 @@
-import {createContext, useState} from "react";
+import { createContext, useState } from "react";
 
 export const InterviewContext = createContext(null);
 
-export const InterviewProvider = ({children}) => {
+export const InterviewProvider = ({ children }) => {
+  // Full interview object from DB
   const [interviewData, setInterviewData] = useState({});
+
+  // Current question index (0-based)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState(); // Store answers here
-  const [listening, setListening] = useState(false); // Speech recognition status
+
+  // Current question's answer text (for voice / typing in MainPanel)
+  const [answers, setAnswers] = useState("");
+
+  // Map of { questionIndex: answerText } — used for pre-populating on resume
+  const [answersMap, setAnswersMap] = useState({});
+
+  // Is speech recognition active?
+  const [listening, setListening] = useState(false);
+
+  // Posture warning counter shown in TopBar
+  const [warningCount, setWarningCount] = useState(0);
 
   return (
     <InterviewContext.Provider
@@ -16,10 +29,16 @@ export const InterviewProvider = ({children}) => {
         currentQuestionIndex,
         setCurrentQuestionIndex,
         answers,
-        setAnswers
+        setAnswers,
+        answersMap,
+        setAnswersMap,
+        listening,
+        setListening,
+        warningCount,
+        setWarningCount,
       }}
-      >
-        {children}
-      </InterviewContext.Provider>
-  )
-}
+    >
+      {children}
+    </InterviewContext.Provider>
+  );
+};

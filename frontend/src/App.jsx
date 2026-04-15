@@ -8,6 +8,8 @@ import HomePage from './pages/Home'
 import InterviewSelection from './pages/InterviewSelection'
 import InterviewRoom from './pages/InterviewRoom'
 import InterviewResult from './pages/InterviewResult'
+import InterviewCodingModel from './components/InterviewCodingModel'
+import { CodingType } from './pages/CodingType'
 
 
 
@@ -24,6 +26,8 @@ const App = () => {
         <Route path="/interview" element={<ProtectedRoutes><InterviewSelection /></ProtectedRoutes>} />
         <Route path="/interview-room" element={<ProtectedRoutes><InterviewRoom /></ProtectedRoutes>} />
         <Route path="/interview-result" element={<ProtectedRoutes><InterviewResult /></ProtectedRoutes>} />
+        <Route path="/coding-interview" element={<ProtectedRoutes><InterviewCodingModel /></ProtectedRoutes>} />
+        <Route path="/coding" element={<ProtectedRoutes><CodingType /></ProtectedRoutes>} />
             
       </Routes>
     </div>

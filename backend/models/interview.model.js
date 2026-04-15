@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 const AnswerSchema = new mongoose.Schema(
   {
+    // Index of the question this answer belongs to (0-based)
+    questionIndex: {
+      type: Number,
+      required: true,
+    },
     answerText: {
       type: String, // voice → text OR typed answer
       default: "",
@@ -13,7 +18,7 @@ const AnswerSchema = new mongoose.Schema(
     answerType: {
       type: String,
       enum: ["voice", "text", "code"],
-      default: "voice",
+      default: "text",
     },
     timeTaken: {
       type: Number, // seconds
@@ -41,7 +46,8 @@ const InterviewSessionSchema = new mongoose.Schema(
     // 🧪 Interview Meta
     category: {
       type: String,
-      enum: ["Reactjs", "MERN Stack", "Fullstack", "DSA", "HR"],
+      // Added "Coding" and "Backend (Node/Exp)" to match frontend selection values
+      enum: ["Reactjs", "MERN Stack", "Fullstack", "DSA", "HR", "Coding", "Backend (Node/Exp)"],
       required: true,
     },
 
@@ -89,6 +95,16 @@ const InterviewSessionSchema = new mongoose.Schema(
       comment: {
         type: String,
       },
+    },
+
+    // 🏆 Final Computed Result
+    result: {
+      score: Number,
+      answeredCount: Number,
+      totalQuestions: Number,
+      strongTopics: [String],
+      weakTopics: [String],
+      feedback: String,
     },
   },
   {

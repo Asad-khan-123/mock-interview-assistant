@@ -55,19 +55,16 @@ const cohere = new CohereClient({
 
 export const generateInterviewQuestions = async ({ category, difficulty }) => {
   console.log("Generating questions for category:", category, "difficulty:", difficulty);
-  try {
-    const response = await cohere.chat({
-      model: "command-a-03-2025",
-      message: `
-Return ONLY a valid JSON array. you are a tech interviewer generate such types of questions so that student feels like real tech interviews, question shiuld be match like asked in real online interviews.
 
-Rules:
-- Exactly 5 interview questions
-- No numbering
-- No answers
-- No explanations
-- No markdown
-- No extra text
+  // Determine if this is a coding/algorithm-style interview
+  const isCodingCategory = ["Coding", "DSA"].includes(category);
+
+  const prompt = isCodingCategory
+    ? `
+Return ONLY a valid JSON array. You are a coding interview expert.
+Generate exactly 5 coding/algorithm interview questions for a ${difficulty} level.
+Questions should be like LeetCode style — short problem statements that can be solved with code.
+Do NOT include answers or hints.
 
 Schema:
 [
@@ -76,7 +73,26 @@ Schema:
 
 Category: ${category}
 Difficulty: ${difficulty}
-      `,
+    `
+    : `
+Return ONLY a valid JSON array. You are a tech interviewer generating theory-based interview questions.
+Generate exactly 5 interview questions for a college-level student.
+Questions should be theory-based (not coding), realistic, like what is asked in real online interviews.
+In easy level ask simple conceptual questions.
+
+Schema:
+[
+  { "question": "string" }
+]
+
+Category: ${category}
+Difficulty: ${difficulty}
+    `;
+
+  try {
+    const response = await cohere.chat({
+      model: "command-a-03-2025",
+      message: prompt,
       temperature: 0.2,
       max_tokens: 800,
     });
@@ -95,7 +111,6 @@ Difficulty: ${difficulty}
     }
 
     const jsonString = rawText.slice(start, end + 1);
-
     const parsed = JSON.parse(jsonString);
 
     if (!Array.isArray(parsed)) {

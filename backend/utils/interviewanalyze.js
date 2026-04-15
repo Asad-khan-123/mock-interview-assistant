@@ -9,7 +9,6 @@ const cohere = new CohereClient({
 export const analyzeInterview = async (interview) => {
   try {
 
-    // ✅ Sirf question + answer extract karo
     const qaPairs = interview.answers.map((item) => ({
       question: item.question,
       answer: item.answerText,
@@ -57,7 +56,6 @@ ${JSON.stringify(qaPairs)}
 
     const rawText = response.text.trim();
 
-    // JSON extract
     const start = rawText.indexOf("{");
     const end = rawText.lastIndexOf("}");
 
